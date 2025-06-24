@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FXV LXM ULTIMATE</title>
+<!-- Font Awesome & Google Fonts -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --dark-bg: #000000; /* Dark black background */
+  --primary-color: #0d1b2a; /* Dark Blue */
+  --accent-color: #b22222; /* Dark Red */
+  --blue-tone: #1e3d59; /* Deep Blue */
+  --light-text: #e0e6f0;
+  --neon-cyan: #00f0ff;
+  --neon-blue: #00aaff;
+  --neon-purple: #a050ff;
+  --neon-green: #3aff95;
+  --neon-red: #ff4d4d;
+  --neon-yellow: #fff000;
+  --border-glow: 0 0 15px rgba(0, 255, 255, 0.5);
+  --text-glow: 0 0 8px rgba(0,255,255,0.7);
+  --transition-speed: 0.3s;
+}
+
+/* Reset & Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: linear-gradient(135deg, var(--dark-bg), var(--primary-color), #0f1a3c);
+  color: var(--light-text);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* Login Container */
+.login-container {
+  position: fixed;
+  top: 0; left: 0; right:0; bottom:0;
+  background: linear-gradient(135deg, #020024, #090979, var(--primary-color));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.login-box {
+  background: rgba(0,0,0,0.85);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  width: 90%;
+  max-width: 400px;
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.login-box h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: var(--neon-cyan);
+  text-shadow: var(--text-glow);
+}
+#edktKey {
+  padding: 15px;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.4);
+  color: var(--neon-green);
+  outline: none;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+#edktKey:focus {
+  box-shadow: inset 0 0 8px rgba(0,255,255,0.7), 0 0 15px rgba(0,255,255,0.3);
+  border-color: rgba(0,255,255,0.5);
+}
+#loginButton {
+  padding: 15px;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-cyan));
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+#loginButton:hover:not(:disabled) {
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-blue));
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0,255,255,0.5);
+}
+#loginButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+#errorBox {
+  color: var(--neon-red);
+  font-size: 14px;
+  min-height: 1.2em;
+}
+
+/* Main Content */
+#predictor-content {
+  display: none;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background: rgba(10,10,25,0.8);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+/* Animated Title SVG */
+.wrapper {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.wrapper svg {
+  width: 100%;
+  height: 80px;
+}
+.wrapper svg text {
+  font-family: 'Orbitron', sans-serif;
+  fill: none;
+  stroke: url(#gradient);
+  stroke-width: 2px;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
+  animation: dash 5s linear infinite alternate;
+  font-size: 42px;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0,255,255,0.7);
+}
+@keyframes dash {
+  0% { stroke-dashoffset: 700; }
+  100% { stroke-dashoffset: 0; }
+}
+/* Gradient for SVG text stroke */
+#gradient {
+  position: absolute;
+  width: 100%; height: 100%;
+}
+#gradient stop {
+  stop-color: #00f0ff; /* Cyan */
+}
+#gradient stop:nth-child(2) {
+  stop-color: #a050ff; /* Purple */
+}
+#gradient stop:nth-child(3) {
+  stop-color: #3aff95; /* Green */
+}
+
+/* Prediction Card */
+.card {
+  background: rgba(0,0,0,0.85);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: var(--border-glow);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+}
+
+/* Header & Labels */
+.card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: var(--neon-cyan);
+  text-shadow: var(--text-glow);
+  text-align: center;
+}
+.label {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: var(--neon-cyan);
+}
+.label i {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+#periodDisplay {
+  width: 100%;
+  padding: 15px;
+  font-size: 24px;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.4);
+  color: var(--neon-green);
+  margin-bottom: 15px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 2px;
+}
+/* Prediction & Opposite Number */
+.result-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+#predictionDisplay {
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 1.5em;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  color: #222;
+  box-shadow: 0 0 10px rgba(0,255,255,0.7);
+  min-width: 120px;
+  text-align: center;
+}
+#oppositeNumberDisplay {
+  font-size: 1.3em;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: rgba(160,80,255,0.2);
+  border: 1px solid rgba(160,80,255,0.3);
+  font-weight: 700;
+  color: var(--neon-purple);
+  text-shadow: var(--text-glow);
+}
+
+/* Stats Dashboard */
+.dashboard {
+  margin-top: 30px;
+  border-top: 2px solid rgba(255,255,255,0.3);
+  padding-top: 20px;
+}
+.dashboard h4 {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: var(--neon-cyan);
+  text-shadow: var(--text-glow);
+}
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+}
+.stat-row:hover {
+  background: rgba(0,255,255,0.2);
+}
+.stat-label {
+  font-weight: 600;
+  color: var(--light-text);
+}
+.stat-value {
+  font-weight: 700;
+  color: var(--neon-green);
+}
+.connection-status {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--neon-green);
+}
+.connection-status span {
+  margin-left: 8px;
+}
+
+/* History Section */
+.history-title {
+  margin-top: 40px;
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  color: var(--neon-cyan);
+  margin-bottom: 15px;
+  position: relative;
+}
+.history-title::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+}
+.history-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.history-card {
+  background: rgba(10,10,25,0.7);
+  border-left: 4px solid transparent;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  position: relative;
+}
+.history-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.history-card.yellow {
+  border-left-color: var(--neon-yellow);
+}
+.history-card.green {
+  border-left-color: var(--neon-green);
+}
+.history-card.red {
+  border-left-color: var(--neon-red);
+}
+.history-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.history-details strong {
+  color: var(--neon-cyan);
+  margin-bottom: 4px;
+  font-family: 'Orbitron', sans-serif;
+}
+.history-details span {
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+  color: #ccc;
+}
+.history-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 15px;
+}
+.history-actions i {
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: all 0.3s ease;
+}
+.fa-trash-alt {
+  color: var(--neon-red);
+}
+.fa-trash-alt:hover {
+  transform: scale(1.2);
+  color: #ff0000;
+}
+.spinner {
+  animation: spin 1.5s linear infinite;
+  color: var(--neon-yellow);
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Footer */
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--neon-cyan);
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 10px rgba(0,255,255,0.4);
+}
+.footer i {
+  margin-right: 8px;
+}
+
+/* Responsive */
+@media(max-width: 950px){
+  #predictor-content { padding: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Login UI -->
+<div class="login-container" id="loginContainer">
+  <div class="login-box">
+    <h2>FXV LXM ULTIMATE</h2>
+    <input type="text" id="edktKey" placeholder="ENTER ACCESS KEY" />
+    <button id="loginButton" onclick="login()">AUTHENTICATE</button>
+    <div class="error" id="errorBox"></div>
+  </div>
+</div>
+
+<!-- Main Predictor UI -->
+<div id="predictor-content">
+  <!-- Title SVG -->
+  <div class="wrapper">
+    <svg viewBox="0 0 400 70">
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#00f0ff" />
+          <stop offset="50%" stop-color="#a050ff" />
+          <stop offset="100%" stop-color="#3aff95" />
+        </linearGradient>
+      </defs>
+      <text x="50%" y="50%" dy=".35em" text-anchor="middle">FXV ULTIMATE</text>
+    </svg>
+  </div>
+
+  <!-- Prediction Card -->
+  <div class="card">
+    <h3>Prediction & Analysis</h3>
+    <div class="label"><i class="fa-solid fa-calendar-days"></i> CURRENT PERIOD</div>
+    <input type="text" id="periodDisplay" value="-" readonly />
+    <div class="result-section">
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <span class="label"><i class="fa-solid fa-chart-line"></i> PREDICTION</span>
+        <div id="predictionDisplay">-</div>
+        <div id="oppositeNumberDisplay">-</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Stats -->
+  <div class="card">
+    <h3>Analysis Dashboard</h3>
+    <div class="stat-row"><div class="stat-label"><i class="fa-solid fa-percent"></i> WIN RATE</div><div class="stat-value" id="accuracy">0%</div></div>
+    <div class="stat-row"><div class="stat-label"><i class="fa-solid fa-trophy"></i> WINS</div><div class="stat-value" id="wins">0</div></div>
+    <div class="stat-row"><div class="stat-label"><i class="fa-solid fa-skull-crossbones"></i> LOSSES</div><div class="stat-value" id="losses">0</div></div>
+    <div class="stat-row"><div class="stat-label"><i class="fa-solid fa-server"></i> CONNECTION</div><div class="connection-status"><span class="connected">ONLINE</span></div></div>
+  </div>
+
+  <!-- History -->
+  <div>
+    <div class="history-title">PREDICTION HISTORY</div>
+    <div class="history-container" id="historyContainer"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <i class="fa-brands fa-telegram"></i> @FLETXO1
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBzOKZZAxoBc9OPJeI13H5B7Ap8Aj2PbpY",
+    databaseURL: "https://lwfle-89726-default-rtdb.firebaseio.com/"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // DOM Elements
+  const loginContainer = document.getElementById("loginContainer");
+  const keyInput = document.getElementById("edktKey");
+  const loginButton = document.getElementById("loginButton");
+  const errorBox = document.getElementById("errorBox");
+  const predictorContent = document.getElementById("predictor-content");
+
+  // Global Data
+  let historyData = [];
+  let lastFetchedPeriod = null;
+  let lastPrediction = null;
+  let lastOppositeNumber = null;
+  let globalPrediction = null;
+  let predictorInterval = null;
+  let lastStatus = null;
+
+  // Device ID
+  let deviceId = localStorage.getItem("deviceId");
+  if (!deviceId) {
+    deviceId = "device-" + Math.random().toString(36).substring(2,15) + Date.now();
+    localStorage.setItem("deviceId", deviceId);
+  }
+
+  // Login Function
+async function login() {
+  const key = keyInput.value.trim();
+  errorBox.innerText = "";
+  if(!key){ errorBox.innerText="ACCESS KEY REQUIRED"; return; }
+  try {
+    const keyRef = db.ref("accessKeys/"+key);
+    const snap = await keyRef.once("value");
+    if(!snap.exists()){ errorBox.innerText="❌ INVALID KEY"; return; }
+    const data = snap.val();
+    if(data.expiresAt && Date.now() > data.expiresAt){ errorBox.innerText="❌ KEY EXPIRED"; return; }
+
+    // Update device info
+    await keyRef.update({ device: deviceId, lastUsedAt: Date.now() });
+    localStorage.setItem("userKey", key);
+    loginContainer.style.display="none";
+    predictorContent.style.display="block";
+    startPredictor();
+  } catch(e){ console.error(e); errorBox.innerText="AUTHENTICATION FAILED"; }
+}
+
+// Auto-login
+async function autoLogin() {
+  const storedKey = localStorage.getItem("userKey");
+  if(!storedKey){ loginContainer.style.display="flex"; predictorContent.style.display="none"; return; }
+  try {
+    const ref = db.ref("accessKeys/"+storedKey);
+    const snap = await ref.once("value");
+    if(!snap.exists()){ localStorage.removeItem("userKey"); localStorage.removeItem("deviceId"); loginContainer.style.display="flex"; predictorContent.style.display="none"; return; }
+    const data = snap.val();
+    if(data.expiresAt && Date.now() > data.expiresAt){ localStorage.removeItem("userKey"); localStorage.removeItem("deviceId"); errorBox.innerText="❌ KEY EXPIRED"; loginContainer.style.display="flex"; predictorContent.style.display="none"; return; }
+    if(data.device !== deviceId){ localStorage.removeItem("userKey"); errorBox.innerText="❌ DEVICE MISMATCH"; loginContainer.style.display="flex"; predictorContent.style.display="none"; return; }
+    await ref.update({ lastUsedAt: Date.now() });
+    loginContainer.style.display="none"; predictorContent.style.display="block"; startPredictor();
+  } catch(e){ console.error(e); localStorage.removeItem("userKey"); localStorage.removeItem("deviceId"); errorBox.innerText="AUTO-LOGIN FAILED"; loginContainer.style.display="flex"; predictorContent.style.display="none"; }
+}
+
+// Get opposite number
+function getOppositeNumber(prediction) {
+  const smallNumbers = [1,2,3,4,0];
+  const bigNumbers = [8,9,7,6,5];
+  return prediction==="BIG" ? smallNumbers[Math.floor(Math.random()*smallNumbers.length)] : bigNumbers[Math.floor(Math.random()*bigNumbers.length)];
+}
+
+// Advanced Prediction Algorithm
+function advancedAIPredict(history) {
+  const filtered = history.filter(h => h.result !== "-");
+  if(filtered.length < 5) return { prediction: Math.random() > 0.5 ? "BIG" : "SMALL" };
+  const recent = filtered.slice(-20);
+  let bigWeightedCount = 0;
+  let smallWeightedCount = 0;
+  let totalWeight = 0;
+  for(let i=0; i<recent.length; i++) {
+    const weight = Math.pow(1.05, i); // recent results weighted more
+    totalWeight += weight;
+    if(recent[i].result >=5) bigWeightedCount+= weight;
+    else smallWeightedCount+= weight;
+  }
+  const ratioBig = bigWeightedCount/totalWeight;
+  const ratioSmall = smallWeightedCount/totalWeight;
+  const threshold=0.55;
+  if(ratioBig > ratioSmall && ratioBig > threshold) return { prediction: "BIG" };
+  if(ratioSmall > ratioBig && ratioSmall > threshold) return { prediction: "SMALL" };
+  // fallback random with bias
+  return { prediction: Math.random() > 0.5 ? "BIG" : "SMALL" };
+}
+
+// Update last status based on actual number
+function updateLastStatus(actualNumber) {
+  const category = actualNumber >=5 ? "BIG" : "SMALL";
+  const match = category===lastPrediction;
+  lastStatus = match ? "WIN" : "LOSS";
+}
+
+// Fetch game result
+async function fetchGameResult() {
+  try {
+    const res = await fetch("https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pageSize:10, pageNo:1, typeId:1, language:0,
+        random:"4a0522c6ecd8410496260e686be2a57c",
+        signature:"334B5E70A0C9B8918B0B15E517E2069C",
+        timestamp: Math.floor(Date.now()/1000)
+      })
+    });
+    const data = await res.json();
+    return data?.data?.list?.[0] || null;
+  } catch(e){ console.error(e); return null; }
+}
+
+async function updatePrediction() {
+  const result = await fetchGameResult();
+  if(!result){ console.warn('No result'); setTimeout(updatePrediction,5000); return; }
+  if(result.issueNumber===lastFetchedPeriod){ return; }
+  if(historyData.length && historyData[0].resultStatus==="Pending"){
+    const actualNumber = Number(result.number);
+    updateLastStatus(actualNumber);
+    historyData[0].result=actualNumber;
+    historyData[0].resultStatus=lastStatus;
+  }
+  // Prediction
+  const predictionObj = advancedAIPredict(historyData);
+  lastPrediction=predictionObj.prediction;
+  lastOppositeNumber=getOppositeNumber(lastPrediction);
+  globalPrediction=lastPrediction;
+
+  const nextPeriodFull = (BigInt(result.issueNumber)+1n).toString();
+  const nextPeriod=nextPeriodFull.slice(-4);
+  document.getElementById("periodDisplay").value=nextPeriod;
+  document.getElementById("predictionDisplay").innerText=globalPrediction;
+  document.getElementById("oppositeNumberDisplay").innerText=lastOppositeNumber;
+
+  // Save to history
+  historyData.unshift({
+    period: nextPeriod,
+    prediction: globalPrediction,
+    oppositeNumber: lastOppositeNumber,
+    result: "-",
+    resultStatus: "Pending"
+  });
+  if(historyData.length > 20) historyData.pop();
+  updateHistory();
+  updateStats();
+  lastFetchedPeriod=result.issueNumber;
+}
+
+// Delete history item
+function deleteHistory(index){
+  historyData.splice(index,1);
+  updateHistory();
+  updateStats();
+}
+
+// Update history UI
+function updateHistory() {
+  const container = document.getElementById("historyContainer");
+  container.innerHTML=historyData.map((item,i)=>{
+    let colorClass="";
+    if(item.resultStatus==="WIN") colorClass="green";
+    else if(item.resultStatus==="LOSS") colorClass="red";
+    else colorClass="yellow";
+
+    let iconClass="";
+    if(item.resultStatus==="WIN") iconClass="fa-circle-check win-icon";
+    else if(item.resultStatus==="LOSS") iconClass="fa-circle-xmark loss-icon";
+    else iconClass="fa-spinner spinner";
+
+    return `<div class="history-card ${colorClass}">
+      <div class="history-details">
+        <strong><i class="fa fa-calendar-alt"></i> PERIOD ${item.period}</strong>
+        <span><i class="fa fa-chart-line"></i> ${item.prediction} | <i class="fa fa-sync-alt"></i> ${item.oppositeNumber}</span>
+        <span><i class="fa fa-dice"></i> ${item.result !== "-" ? item.result : "PENDING"}</span>
+      </div>
+      <div class="history-actions">
+        <i class="fa ${iconClass}"></i>
+        <i class="fa-solid fa-trash-alt" onclick="deleteHistory(${i})"></i>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Update stats
+function updateStats() {
+  const wins=historyData.filter(h=>h.resultStatus==="WIN").length;
+  const losses=historyData.filter(h=>h.resultStatus==="LOSS").length;
+  const total=wins+losses;
+  const accuracy= total>0 ? ((wins/total)*100).toFixed(2):"0";
+  document.getElementById("wins").innerText=wins;
+  document.getElementById("losses").innerText=losses;
+  document.getElementById("accuracy").innerText=`${accuracy}%`;
+}
+
+// Start predictor loop
+function startPredictor() {
+  updatePrediction();
+  predictorInterval=setInterval(updatePrediction,5000);
+}
+
+// Initialize auto-login
+document.addEventListener("DOMContentLoaded", autoLogin);
+</script>
+
+</body>
+</html>
