@@ -40,12 +40,12 @@ body {
   background: linear-gradient(135deg, var(--dark-bg), var(--primary-color), #0f1a3c);
   color: var(--light-text);
   min-height: 100vh;
-  padding: 10px;
+  padding: 10px; /* Reduced padding for full page fit */
   font-size: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow: hidden; /* Prevent overflow */
 }
 
 /* Join Screen */
@@ -103,8 +103,15 @@ body {
 .join-btn.btn2:hover {
   background: linear-gradient(45deg, #ff4d4d, #00aaff);
 }
+/* New Button Style */
+.join-btn.btn3 {
+  background: linear-gradient(45deg, #ffcc00, #ff6600);
+}
+.join-btn.btn3:hover {
+  background: linear-gradient(45deg, #ff6600, #ffcc00);
+}
 
-/* Main login container hidden initially, shown after both clicks */
+/* Main content (login) hidden initially, shown after join */
 #loginContainer {
   background: linear-gradient(135deg, #020024, #090979, var(--primary-color));
   padding: 30px;
@@ -112,7 +119,7 @@ body {
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
   width: 90%;
   max-width: 400px;
-  display: none;
+  display: none; /* Hidden initially */
   flex-direction: column;
   align-items: center;
 }
@@ -170,7 +177,7 @@ body {
   min-height: 1.2em;
 }
 
-/* Popup overlay for join links */
+/* Popup overlay for the join links */
 #popupOverlay {
   display: none; /* Hidden initially */
   position: fixed;
@@ -221,6 +228,13 @@ body {
 .btn2:hover {
   background: linear-gradient(45deg, #ff4d4d, #00aaff);
 }
+/* New Button Style in popup */
+.btn3 {
+  background: linear-gradient(45deg, #ffcc00, #ff6600);
+}
+.btn3:hover {
+  background: linear-gradient(45deg, #ff6600, #ffcc00);
+}
 #closePopupBtn {
   margin-top: 15px;
   padding: 10px 20px;
@@ -261,7 +275,7 @@ body {
 </head>
 <body>
 
-<!-- Join Screen -->
+<!-- Join Screen (initial) -->
 <div id="joinScreen">
   <h2>Commence Your Journey</h2>
   <div id="noticeMessage">
@@ -270,11 +284,13 @@ body {
   <div id="joinButtons">
     <a href="https://t.me/+O6wMp0iqWaUzYWE8" target="_blank" class="join-btn btn1" id="joinMain">JOIN MAIN</a>
     <a href="https://t.me/+nebYUxxzSNQzODg1" target="_blank" class="join-btn btn2" id="joinMain2">JOIN MAIN 2</a>
+    <!-- New link button -->
+    <a href="https://t.me/+Bxil_7G1IbBjM2U9" target="_blank" class="join-btn btn3" id="joinExtra">JOIN EXTRA</a>
   </div>
   <button style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; background:#444; color:#fff; cursor:pointer; font-weight:600;" id="proceedBtn">Proceed to Login</button>
 </div>
 
-<!-- Login UI -->
+<!-- Login UI (hidden initially) -->
 <div id="loginContainer">
   <div class="login-box">
     <h2>FXV LXM ULTIMATE</h2>
@@ -291,6 +307,7 @@ body {
     <div class="popup-buttons">
       <a href="https://t.me/+O6wMp0iqWaUzYWE8" target="_blank" class="btn1" id="popupJoinMain">JOIN MAIN</a>
       <a href="https://t.me/+nebYUxxzSNQzODg1" target="_blank" class="btn2" id="popupJoinMain2">JOIN MAIN 2</a>
+      <a href="https://t.me/+Bxil_7G1IbBjM2U9" target="_blank" class="btn3" id="popupJoinExtra">JOIN EXTRA</a>
     </div>
     <button id="closePopupBtn" onclick="closePopup()">Close</button>
   </div>
@@ -301,29 +318,40 @@ body {
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-  // Firebase config
+  // Firebase configuration (updated with your provided details)
   const firebaseConfig = {
-    apiKey: "AIzaSyBzOKZZAxoBc9OPJeI13H5B7Ap8Aj2PbpY",
-    databaseURL: "https://lwfle-89726-default-rtdb.firebaseio.com/"
+    apiKey: "AIzaSyCpSU98D6wMV1HyS5DpmuaaVzDswbyNrmo",
+    authDomain: "fletxofusiondino.firebaseapp.com",
+    databaseURL: "https://fletxofusiondino-default-rtdb.firebaseio.com",
+    projectId: "fletxofusiondino",
+    storageBucket: "fletxofusiondino.appspot.com",
+    messagingSenderId: "64276618467",
+    appId: "1:64276618467:android:24809ba39db9852fce39d6"
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Track whether links are clicked
-  const joinClicks = { main: false, main2: false };
+  // Elements
+  const joinScreen = document.getElementById('joinScreen');
+  const loginContainer = document.getElementById('loginContainer');
+  const errorBox = document.getElementById('errorBox');
 
-  document.getElementById('joinMain').addEventListener('click', () => {
-    joinClicks.main = true;
-  });
-  document.getElementById('joinMain2').addEventListener('click', () => {
-    joinClicks.main2 = true;
-  });
+  const joinMainLink = document.getElementById('joinMain');
+  const joinMain2Link = document.getElementById('joinMain2');
+  const joinExtraLink = document.getElementById('joinExtra');
 
+  const joinClicks = { main: false, main2: false, extra: false };
+
+  // Track clicks
+  document.getElementById('joinMain').addEventListener('click', () => { joinClicks.main = true; });
+  document.getElementById('joinMain2').addEventListener('click', () => { joinClicks.main2 = true; });
+  document.getElementById('joinExtra').addEventListener('click', () => { joinClicks.extra = true; });
+
+  // Show login screen
   document.getElementById('proceedBtn').addEventListener('click', () => {
-    if (!(joinClicks.main && joinClicks.main2)) {
+    if (!(joinClicks.main && joinClicks.main2 && joinClicks.extra)) {
       crashPage();
     } else {
-      // Both clicked, go inside
       joinScreen.style.display = 'none';
       document.getElementById('loginContainer').style.display = 'flex';
     }
@@ -331,7 +359,7 @@ body {
 
   function crashPage() {
     document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%; font-family:Arial;'>Critical Error: Unauthorized Access Detected. The system will now terminate.</h1>";
-    throw new Error("User did not click both join links");
+    throw new Error("User did not click all join links");
   }
 
   function showLogin() {
@@ -343,32 +371,32 @@ body {
     document.getElementById('popupOverlay').style.display = 'none';
   }
 
-  async function login() {
-    const key = document.getElementById('edktKey').value.trim();
-    document.getElementById('errorBox').innerText = "";
-    if (!key) {
-      document.getElementById('errorBox').innerText = "ACCESS KEY REQUIRED";
+  // Login functionality
+async function login() {
+  const key = document.getElementById('edktKey').value.trim();
+  errorBox.innerText = "";
+  if (!key) {
+    errorBox.innerText = "ACCESS KEY REQUIRED";
+    return;
+  }
+  try {
+    const keyRef = db.ref("accessKeys/" + key);
+    const snap = await keyRef.once("value");
+    if (!snap.exists()) {
+      errorBox.innerText = "❌ INVALID KEY";
       return;
     }
-    try {
-      const keyRef = db.ref("accessKeys/" + key);
-      const snap = await keyRef.once("value");
-      if (!snap.exists()) {
-        document.getElementById('errorBox').innerText = "❌ INVALID KEY";
-        return;
-      }
-      const data = snap.val();
-      if (data.expiresAt && Date.now() > data.expiresAt) {
-        document.getElementById('errorBox').innerText = "❌ KEY EXPIRED";
-        return;
-      }
-      window.location.href = "https://fletxo-fireflame.vercel.app/";
-    } catch (e) {
-      console.error(e);
-      document.getElementById('errorBox').innerText = "AUTHENTICATION FAILED";
+    const data = snap.val();
+    if (data.expiresAt && Date.now() > data.expiresAt) {
+      errorBox.innerText = "❌ KEY EXPIRED";
+      return;
     }
+    window.location.href = "https://fletxo-fireflame.vercel.app/";
+  } catch (e) {
+    console.error(e);
+    errorBox.innerText = "AUTHENTICATION FAILED";
   }
+}
 </script>
-
 </body>
 </html>
